@@ -63,7 +63,7 @@ method_proxy() {
     fi
     
     # Запускаем proxy
-    ./proxy -l $src_port -h 127.0.0.1 -p $dst_port > "$DATA_DIR/proxy_${src_port}.log" 2>&1 &
+    ./proxy -l $src_port -h 127.0.0.1 -p $dst_port -i "tee -a input.log" -o "tee -a output.log" > "$DATA_DIR/proxy_${src_port}.log" 2>&1 &
     local pid=$(pgrep proxy)
     echo $pid > "$pid_file"
     
