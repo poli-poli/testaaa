@@ -147,7 +147,7 @@ test_connection() {
     echo "Destination: port $dst_port"
     echo ""
     
-    local test_data="PROXY_TEST_$(date +%s)_${RANDOM}"
+    echo "PROXY_TEST_$(date +%s)_${RANDOM}" >> test_case.txt
     local log_file="/tmp/proxy_test"
     
     echo "1. Starting listener $dst_port..."
@@ -157,10 +157,10 @@ test_connection() {
     sleep 0.5
     
     echo "2. Sending test data $src_port..."
-    echo "Data: $test_data"
+    echo "Data: $(cat test_case.txt)"
     echo ""
     
-    if echo "$test_data" | nc -w 2 localhost "$src_port" 2>/dev/null; then
+    if echo "$(cat test_case.txt)" | nc -w 2 localhost "$src_port" 2>/dev/null; then
         echo "Sending"
     fi
     
@@ -170,12 +170,12 @@ test_connection() {
     if [[ -s "$log_file" ]]; then
         local received=$(cat "$log_file")
         echo "Received: $received"
-        
+        local test_data = $(cat test_case.txt)
         if [[ "$received" == "$test_data" ]]; then
             echo -e "${GREEN} SUCCESS ${NC}"
             echo "   $src_port → $dst_port"
         else
-            echo -e "${YELLOW}⚠️  Got corrupted data${NC}"
+            echo -e "${YELLOW}  Got corrupted data${NC}"
             echo "   Send: $test_data"
             echo "   Got:   $received"
         fi
@@ -185,6 +185,7 @@ test_connection() {
     
     kill "$nc_pid" 2>/dev/null
     rm -f "$log_file"
+    rm -f test_case.txt
     echo ""
 }
 
