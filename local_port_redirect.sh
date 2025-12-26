@@ -80,7 +80,7 @@ start_redirect() {
             return 1
         fi
     }
-    method_proxy $src_port $dst_port ;;
+    method_proxy $src_port $dst_port
 }
 
 stop_redirect() {
