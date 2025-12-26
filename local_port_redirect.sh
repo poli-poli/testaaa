@@ -170,7 +170,7 @@ test_connection() {
     if [[ -s "$log_file" ]]; then
         local received=$(cat "$log_file")
         echo "Received: $received"
-        local test_data = $(cat test_case.txt)
+        local test_data=$(cat test_case.txt)
         if [[ "$received" == "$test_data" ]]; then
             echo -e "${GREEN} SUCCESS ${NC}"
             echo "   $src_port → $dst_port"
